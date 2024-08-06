@@ -1,0 +1,22 @@
+#2.9: registry.redhat.io/ansible-automation-platform-22/ee-29-rhel8 (edited) 
+#2.14: registry.redhat.io/ansible-automation-platform-23/ee-supported-rhel8
+#2.13 : registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8
+ARG ee_container=registry.redhat.io/ansible-automation-platform-22/ee-29-rhel8
+FROM $ee_container
+ADD locust-tasks /locust-tasks
+ADD run.sh .
+
+# Install the required dependencies via pip
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install locust
+
+# Set script to be executable
+USER root
+RUN chmod 755 run.sh
+
+# turn off python output buffering
+ENV PYTHONUNBUFFERED=1
+
+# Start Locust using LOCUS_OPTS environment variable
+ENTRYPOINT ["bash", "./run.sh"]
