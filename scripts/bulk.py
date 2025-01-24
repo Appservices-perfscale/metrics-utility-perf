@@ -7,7 +7,7 @@ def basic_auth(username, password):
     token = b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
     return f'Basic {token}'
 
-def creating_hosts(payload_list, url="https://44.203.184.194/api/controller/v2/bulk/host_create/"):
+def creating_hosts(payload_list, url="https://18.207.188.125/api/controller/v2/bulk/host_create/"):
     
     username = "admin"
     password = "Admin!Password!Gw"
@@ -22,7 +22,7 @@ def creating_hosts(payload_list, url="https://44.203.184.194/api/controller/v2/b
 
     payload = json.dumps(
         {
-            "inventory": 3, "hosts": payload_list
+            "inventory": 8, "hosts": payload_list
         }
     )
 
@@ -36,7 +36,7 @@ def creating_payload(number_hosts):
     
     payload_list = list()
     
-    for numb in range(0,number_hosts):
+    for numb in range(1000,number_hosts):
         
         payload_list.append({"name": f"example{numb}.com", "variables": "ansible_connection: local"})
         
@@ -44,5 +44,4 @@ def creating_payload(number_hosts):
     
     
 payload_ = creating_payload(3000) #select # hosts to create
-
 creating_hosts(payload_)

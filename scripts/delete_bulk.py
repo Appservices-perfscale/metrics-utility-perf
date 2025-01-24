@@ -7,7 +7,7 @@ def basic_auth(username, password):
     token = b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
     return f'Basic {token}'
 
-def getting_hosts(url="https://44.203.184.194/api/controller/v2/inventories/3/hosts/"):
+def getting_hosts(url="https://18.207.188.125/api/controller/v2/inventories/8/hosts/"):
     
     username = "admin"
     password = "Admin!Password!Gw"
@@ -35,10 +35,10 @@ def fetching_only_hosts(full_response, number_hosts):
         
     return list_number
     
-def deleting_hosts(list_ids, url="https://44.203.184.194/api/controller/v2/bulk/host_delete/"):
+def deleting_hosts(list_ids, url="https://18.207.188.125/api/controller/v2/bulk/host_delete/"):
     
-    username = "admin"
-    password = "Admin!Password!Gw"
+    username = "larry"
+    password = "larry1"
     
     print(basic_auth(username, password))
 
@@ -62,6 +62,8 @@ def deleting_hosts(list_ids, url="https://44.203.184.194/api/controller/v2/bulk/
 
 f_resp = getting_hosts()
 id_hosts = fetching_only_hosts(f_resp, 3000)
+
+print(id_hosts)
 
 deleting_hosts(id_hosts)
 
