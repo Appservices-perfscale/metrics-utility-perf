@@ -26,9 +26,33 @@
         environment: "workstation"
         role: "developer_machine"
 
-    mock_host_flavor: "" 
+    mock_host_flavor: "RHEL" #change this to mock what you want
+    inventory_id: "6" 
+    api_token: "tJIe1TuJIWBwgrYQlQgjpibyLZf2YO"  
+    controller_url: "https://18.207.188.125/api/controller/v2/bulk/host_create/"  
+
 
   tasks:
+    # - name: Create 5 hosts dynamically in Ansible Controller
+    #   uri:
+    #     url: "{{ controller_url }}"
+    #     method: POST
+    #     headers:
+    #       Authorization: "Bearer {{ api_token }}"
+    #       Content-Type: "application/json"
+    #     body: |
+    #       {
+    #           "inventory": {{ inventory_id }},
+    #           "hosts": [
+    #               {"name": "host{{ item }}", "variables": "ansible_connection: local"},
+    #           ]
+    #       }
+    #     body_format: json
+    #     status_code: 201
+    #     validate_certs: no  # Disable SSL verification
+    #   loop: "{{ range(1, 6) | list }}"
+    #   register: created_hosts
+    #   tags: create_hosts
 
     - name: Mock Ansible facts for testing (simulate specific OS family and virtualization type).
       set_fact:
@@ -37,6 +61,10 @@
         ansible_os_family: "{{ 'RedHat' if mock_host_flavor == 'RHEL' else 'Darwin' if mock_host_flavor == 'MacOS' else '' }}"
         cacheable: true
       when: mock_host_flavor | length > 0  # Only mock if the variable is set
+
+    - name: Load facts from JSON file
+      set_fact:
+        additional_facts: "{{ lookup('file', playbook_dir + '/data.json') | from_json }}"
 
     - name: Detect host flavor based on Ansible facts
       set_fact:
