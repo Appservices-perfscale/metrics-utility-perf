@@ -43,11 +43,13 @@
           {% else %}
             Unknown
           {% endif %}
+        cacheable: true
 
     - name: Mock Ansible facts for testing (simulate a RedHat host). #Unless we have real hosts available Mock it
       set_fact:
         ansible_os_family: "RedHat"
         ansible_virtualization_type: "physical"
+        cacheable: true
 
     - name: Fail if the host flavor is unknown
       fail:
@@ -67,28 +69,31 @@
         custom_host_facts: 
           host_flavor: "{{ host_flavors['MacOS'] }}"
           host_author: "Larry"
-
-
-      when: is_macos | bool
+          cacheable: true
+        when: is_macos | bool
 
     - name: Set custom host facts for RHEL
       set_fact:
         custom_host_facts: "{{ host_flavors['RHEL'] }}"
+        cacheable: true
       when: is_rhel | bool
 
     - name: Set custom host facts for AWS
       set_fact:
         custom_host_facts: "{{ host_flavors['AWS'] }}"
+        cacheable: true
       when: is_aws | bool
 
     - name: Set custom host facts for GCP
       set_fact:
         custom_host_facts: "{{ host_flavors['GCP'] }}"
+        cacheable: true
       when: is_gcp | bool
 
     - name: Set custom host facts for Azure
       set_fact:
         custom_host_facts: "{{ host_flavors['Azure'] }}"
+        cacheable: true
       when: is_azure | bool
 
     - name: Display detected host flavor and custom facts
