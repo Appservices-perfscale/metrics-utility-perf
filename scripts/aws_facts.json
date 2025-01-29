@@ -1,0 +1,100 @@
+{
+  "ansible_facts": {
+    "ansible_virtualization_type": "kvm",
+    "ansible_virtualization_role": "host",
+    "ansible_ec2_ami_id": "ami-9f8d7c6b5a2a3c1d4",
+    "ansible_ec2_ami_launch_index": "1",
+    "ansible_ec2_ami_manifest_path": "s3://my-custom-images/ubuntu18.04-image.json",
+    "ansible_ec2_instance_id": "i-09fba2f573e29a7b8",
+    "ansible_ec2_instance_type": "t3.large",
+    "ansible_ec2_public_ip": "18.223.65.124",
+    "ansible_ec2_private_ip": "172.31.0.45",
+    "ansible_ec2_availability_zone": "us-west-2c",
+    "ansible_ec2_region": "us-west-2",
+    "ansible_ec2_private_dns_name": "ip-172-31-0-45.us-west-2.compute.internal",
+    "ansible_ec2_public_dns_name": "ec2-18-223-65-124.us-west-2.compute.amazonaws.com",
+    "ansible_hostname": "ip-172-31-0-45",
+    "ansible_os_family": "Linux",
+    "ansible_distribution": "CentOS",
+    "ansible_distribution_version": "8.3",
+    "ansible_kernel": "4.18.0-193.14.2.el8_2.x86_64",
+    "ansible_architecture": "x86_64",
+    "ansible_processor_cores": 4,
+    "ansible_processor_threads_per_core": 1,
+    "ansible_processor_count": 4,
+    "ansible_memory_mb": {
+      "real": 16384,
+      "swap": 0
+    },
+    "ansible_processor": [
+      "AMD EPYC 7452 24-Core Processor"
+    ],
+    "ansible_distribution_release": "8.3",
+    "ansible_bios_version": "1.0.0",
+    "ansible_lsb": {
+      "description": "CentOS Linux",
+      "release": "8.3",
+      "codename": "Core",
+      "distributor": "CentOS",
+      "version": "8.3"
+    },
+    "ansible_mounts": [
+      {
+        "device": "/dev/xvda1",
+        "fstype": "xfs",
+        "mount": "/",
+        "size_total": 104857600,
+        "size_used": 2097152,
+        "size_free": 102350848,
+        "uuid": "4b75fd78-3478-4d44-8c4b-485f8fbcc649"
+      },
+      {
+        "device": "/dev/xvdb",
+        "fstype": "xfs",
+        "mount": "/data",
+        "size_total": 209715200,
+        "size_used": 10485760,
+        "size_free": 199229440,
+        "uuid": "2f6e7c4b-fc92-4f4a-bb22-bf3f6ab7bc1b"
+      }
+    ],
+    "ansible_users": [
+      {
+        "name": "centos",
+        "uid": 1000,
+        "groups": [
+          "centos",
+          "wheel",
+          "docker"
+        ]
+      }
+    ],
+    "ansible_interfaces": [
+      {
+        "name": "eth0",
+        "device": "eth0",
+        "ipv4": {
+          "address": "172.31.0.45",
+          "netmask": "255.255.240.0",
+          "gateway": "172.31.0.1"
+        },
+        "ipv6": {
+          "address": "2001:db8::3",
+          "netmask": "64"
+        },
+        "macaddress": "02:00:00:aa:bb:cc"
+      }
+    ],
+    "ansible_default_ipv4": {
+      "address": "172.31.0.45",
+      "netmask": "255.255.240.0",
+      "gateway": "172.31.0.1"
+    },
+    "ansible_default_ipv6": {
+      "address": "2001:db8::3",
+      "netmask": "64",
+      "gateway": "2001:db8::fffe"
+    }
+  }
+}
+

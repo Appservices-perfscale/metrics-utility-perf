@@ -1,0 +1,90 @@
+{
+  "ansible_facts": {
+    "ansible_virtualization_type": "kvm",
+    "ansible_virtualization_role": "host",
+    "ansible_ec2_ami_id": "ami-1234567890abcdefg",
+    "ansible_ec2_ami_launch_index": "0",
+    "ansible_ec2_ami_manifest_path": "s3://aws-packer-images/manifest-v2.json",
+    "ansible_ec2_instance_id": "i-0e8b2a3c9d1f1f8d2",
+    "ansible_ec2_instance_type": "m5.large",
+    "ansible_ec2_public_ip": "54.172.110.99",
+    "ansible_ec2_private_ip": "10.0.2.25",
+    "ansible_ec2_availability_zone": "us-east-1a",
+    "ansible_ec2_region": "us-east-1",
+    "ansible_ec2_private_dns_name": "ip-10-0-2-25.ec2.internal",
+    "ansible_ec2_public_dns_name": "ec2-54-172-110-99.compute-1.amazonaws.com",
+    "ansible_hostname": "ip-10-0-2-25",
+    "ansible_os_family": "Linux",
+    "ansible_distribution": "Ubuntu",
+    "ansible_distribution_version": "20.04",
+    "ansible_kernel": "5.4.0-1050-aws",
+    "ansible_architecture": "x86_64",
+    "ansible_processor_cores": 2,
+    "ansible_processor_threads_per_core": 1,
+    "ansible_processor_count": 2,
+    "ansible_memory_mb": {
+      "real": 8192,
+      "swap": 0
+    },
+    "ansible_processor": [
+      "Intel(R) Xeon(R) CPU @ 3.10GHz"
+    ],
+    "ansible_distribution_release": "20.04",
+    "ansible_bios_version": "1.0.0",
+    "ansible_lsb": {
+      "description": "Ubuntu",
+      "release": "20.04",
+      "codename": "focal",
+      "distributor": "Ubuntu",
+      "version": "20.04"
+    },
+    "ansible_mounts": [
+      {
+        "device": "/dev/xvda1",
+        "fstype": "ext4",
+        "mount": "/",
+        "size_total": 83886080,
+        "size_used": 1048576,
+        "size_free": 81943040,
+        "uuid": "bd54d11b-c654-4d23-b9b5-467ab67890fc"
+      }
+    ],
+    "ansible_users": [
+      {
+        "name": "ubuntu",
+        "uid": 1000,
+        "groups": [
+          "ubuntu",
+          "sudo"
+        ]
+      }
+    ],
+    "ansible_interfaces": [
+      {
+        "name": "eth0",
+        "device": "eth0",
+        "ipv4": {
+          "address": "10.0.2.25",
+          "netmask": "255.255.255.0",
+          "gateway": "10.0.2.1"
+        },
+        "ipv6": {
+          "address": "2001:db8::2",
+          "netmask": "64"
+        },
+        "macaddress": "02:00:00:5e:00:67"
+      }
+    ],
+    "ansible_default_ipv4": {
+      "address": "10.0.2.25",
+      "netmask": "255.255.255.0",
+      "gateway": "10.0.2.1"
+    },
+    "ansible_default_ipv6": {
+      "address": "2001:db8::2",
+      "netmask": "64",
+      "gateway": "2001:db8::fffe"
+    }
+  }
+}
+
