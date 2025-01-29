@@ -26,7 +26,18 @@
         environment: "workstation"
         role: "developer_machine"
 
+    mock_host_flavor: "" 
+
   tasks:
+
+    - name: Mock Ansible facts for testing (simulate specific OS family and virtualization type).
+      set_fact:
+        ansible_facts:
+          ansible_virtualization_type: "{{ 'aws' if mock_host_flavor == 'AWS' else 'gcp' if mock_host_flavor == 'GCP' else 'azure' if mock_host_flavor == 'Azure' else '' }}"
+        ansible_os_family: "{{ 'RedHat' if mock_host_flavor == 'RHEL' else 'Darwin' if mock_host_flavor == 'MacOS' else '' }}"
+        cacheable: true
+      when: mock_host_flavor | length > 0  # Only mock if the variable is set
+
     - name: Detect host flavor based on Ansible facts
       set_fact:
         detected_flavor: >-
@@ -43,12 +54,6 @@
           {% else %}
             Unknown
           {% endif %}
-        cacheable: true
-
-    - name: Mock Ansible facts for testing (simulate a RedHat host). #Unless we have real hosts available Mock it
-      set_fact:
-        ansible_os_family: "RedHat"
-        ansible_virtualization_type: "physical"
         cacheable: true
 
     - name: Fail if the host flavor is unknown
