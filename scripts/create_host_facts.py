@@ -38,11 +38,16 @@ def update_table(host, database, user, password):
         
     # Insert JSON data into the PostgreSQL table
     try:
-
-        cursor.execute(
-            "UPDATE main_host set ansible_facts = %s where id = 3014",
-            [json.dumps(json_data)]  # Convert Python dictionary to JSON string
-        )
+        
+        cursor.execute("SELECT id from main_host") 
+        
+        
+        for row in cursor.fetchall():
+            
+            cursor.execute(
+                "UPDATE main_host set ansible_facts = %s where id = %s",
+                [json.dumps(json_data), row]  # Convert Python dictionary to JSON string
+            )
         conn.commit()
         print("JSON data inserted successfully.")
     except Exception as e:

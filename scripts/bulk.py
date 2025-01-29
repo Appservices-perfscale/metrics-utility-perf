@@ -36,12 +36,12 @@ def creating_payload(number_hosts):
     
     payload_list = list()
     
-    for numb in range(1000,number_hosts):
+    for numb in range(0,number_hosts):
         
         payload_list.append({"name": f"example{numb}.com", "variables": "ansible_connection: local"})
         
     return payload_list
     
     
-payload_ = creating_payload(3000) #select # hosts to create
+payload_ = creating_payload(2000) #select # hosts to create
 creating_hosts(payload_)
