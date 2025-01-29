@@ -1,0 +1,113 @@
+---
+- name: Configure hosts facts based on detected host flavor
+  hosts: all
+  gather_facts: yes  # Ensure Ansible gathers host facts
+  vars:
+    # Define custom host configurations based on facts
+    host_flavors:
+      RHEL:
+        os_family: "RedHat"
+        environment: "on-prem"
+        role: "enterprise_server"
+      AWS:
+        cloud_provider: "Amazon"
+        environment: "cloud"
+        role: "aws_instance"
+      GCP:
+        cloud_provider: "Google"
+        environment: "cloud"
+        role: "gcp_instance"
+      Azure:
+        cloud_provider: "Microsoft Azure"
+        environment: "cloud"
+        role: "azure_instance"
+      MacOS:
+        os_family: "Darwin"
+        environment: "workstation"
+        role: "developer_machine"
+
+  tasks:
+    - name: Detect host flavor based on Ansible facts
+      set_fact:
+        detected_flavor: >-
+          {% if ansible_os_family | default('') == 'RedHat' %}
+            RHEL
+          {% elif ansible_facts['ansible_virtualization_type'] | default('') == 'aws' %}
+            AWS
+          {% elif ansible_facts['ansible_virtualization_type'] | default('') == 'gcp' %}
+            GCP
+          {% elif ansible_facts['ansible_virtualization_type'] | default('') == 'azure' %}
+            Azure
+          {% elif ansible_os_family | default('') == 'Darwin' %}
+            MacOS
+          {% else %}
+            Unknown
+          {% endif %}
+
+    - name: Mock Ansible facts for testing (simulate a RedHat host). #Unless we have real hosts available Mock it
+      set_fact:
+        ansible_os_family: "RedHat"
+        ansible_virtualization_type: "physical"
+
+    - name: Fail if the host flavor is unknown
+      fail:
+        msg: "Could not determine the host flavor. We need either RHEL, AWS, GCP, Azure, or MacOS."
+      when: detected_flavor == "Unknown"
+
+    - name: Detect host type based on Ansible facts
+      set_fact:
+        is_macos: "{{ ansible_os_family == 'Darwin' }}"
+        is_rhel: "{{ ansible_os_family == 'RedHat' }}"
+        is_aws: "{{ ansible_facts.get('ansible_virtualization_type', '') == 'aws' }}"
+        is_gcp: "{{ ansible_facts.get('ansible_virtualization_type', '') == 'gcp' }}"
+        is_azure: "{{ ansible_facts.get('ansible_virtualization_type', '') == 'azure' }}"
+
+    - name: Set custom host facts for MacOS
+      set_fact:
+        custom_host_facts: 
+          host_flavor: "{{ host_flavors['MacOS'] }}"
+          host_author: "Larry"
+
+
+      when: is_macos | bool
+
+    - name: Set custom host facts for RHEL
+      set_fact:
+        custom_host_facts: "{{ host_flavors['RHEL'] }}"
+      when: is_rhel | bool
+
+    - name: Set custom host facts for AWS
+      set_fact:
+        custom_host_facts: "{{ host_flavors['AWS'] }}"
+      when: is_aws | bool
+
+    - name: Set custom host facts for GCP
+      set_fact:
+        custom_host_facts: "{{ host_flavors['GCP'] }}"
+      when: is_gcp | bool
+
+    - name: Set custom host facts for Azure
+      set_fact:
+        custom_host_facts: "{{ host_flavors['Azure'] }}"
+      when: is_azure | bool
+
+    - name: Display detected host flavor and custom facts
+      debug:
+        msg: |
+          Host Flavor: {{ 'MacOS' if is_macos else 'RHEL' if is_rhel else 'AWS' if is_aws else 'GCP' if is_gcp else 'Azure' if is_azure else 'Unknown' }}
+          Custom Host Facts: {{ custom_host_facts }}
+      when: custom_host_facts is defined
+
+    - name: Save host facts to a JSON file (if flavor is detected)
+      copy:
+        dest: /tmp/host_facts_{{ inventory_hostname }}.json
+        content: |
+          {
+            "host": "{{ inventory_hostname }}",
+            "flavor": {{ '"MacOS"' if is_macos else '"RHEL"' if is_rhel else '"AWS"' if is_aws else '"GCP"' if is_gcp else '"Azure"' if is_azure else '"Unknown"' }},
+            "facts": {{ custom_host_facts | to_nice_json }}
+          }
+      when: custom_host_facts is defined
+    
+
+    
