@@ -1,0 +1,47 @@
+- name: Add hello world under the Facts tab for all hosts
+  hosts: all
+  gather_facts: hi
+  vars:
+    controller_url: "https://3.86.144.98"  # Change to your Ansible Controller API URL
+    controller_username: "admin2"          # Change to your Ansible Controller username
+    controller_password: "admin2"          # Change to your Ansible Controller password
+
+  tasks:
+    - name: Fetch All Hosts from Ansible Controller
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/api/v2/hosts/"
+        method: GET
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: "application/json"
+        return_content: yes
+        validate_certs: no
+      register: all_hosts_response
+
+    - name: Extract Host IDs
+      set_fact:
+        all_host_list: "{{ all_hosts_response.json.results | map(attribute='id') | list }}"
+      when: all_hosts_response.json.results | length > 0
+
+    - name: Update Ansible Facts for All Hosts with "hello world"
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/api/v2/hosts/{{ item }}/ansible_facts/"
+        method: PUT
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: "application/json"
+        body_format: json
+        body: "{{ {'ansible_facts': {'custom_fact': 'hello world'}} | to_json }}"
+        status_code: [200, 201, 202]
+        validate_certs: no
+      loop: "{{ all_host_list }}"
+      when: all_host_list | length > 0
+      register: fact_update_results
+
+    - name: Debug Fact Update Results
+      debug:
+        var: fact_update_results

@@ -62,9 +62,9 @@
         cacheable: true
       when: mock_host_flavor | length > 0  # Only mock if the variable is set
 
-    - name: Load facts from JSON file
-      set_fact:
-        additional_facts: "{{ lookup('file', playbook_dir + '/data.json') | from_json }}"
+    # - name: Load facts from JSON file
+    #   set_fact:
+    #     additional_facts: "{{ lookup('file', playbook_dir + '/data.json') | from_json }}"
 
     - name: Detect host flavor based on Ansible facts
       set_fact:
@@ -136,16 +136,16 @@
           Custom Host Facts: {{ custom_host_facts }}
       when: custom_host_facts is defined
 
-    - name: Save host facts to a JSON file (if flavor is detected)
-      copy:
-        dest: /tmp/host_facts_{{ inventory_hostname }}.json
-        content: |
-          {
-            "host": "{{ inventory_hostname }}",
-            "flavor": {{ '"MacOS"' if is_macos else '"RHEL"' if is_rhel else '"AWS"' if is_aws else '"GCP"' if is_gcp else '"Azure"' if is_azure else '"Unknown"' }},
-            "facts": {{ custom_host_facts | to_nice_json }}
-          }
-      when: custom_host_facts is defined
+    # - name: Save host facts to a JSON file (if flavor is detected)
+    #   copy:
+    #     dest: /tmp/host_facts_{{ inventory_hostname }}.json
+    #     content: |
+    #       {
+    #         "host": "{{ inventory_hostname }}",
+    #         "flavor": {{ '"MacOS"' if is_macos else '"RHEL"' if is_rhel else '"AWS"' if is_aws else '"GCP"' if is_gcp else '"Azure"' if is_azure else '"Unknown"' }},
+    #         "facts": {{ custom_host_facts | to_nice_json }}
+    #       }
+    #   when: custom_host_facts is defined
     
 
     

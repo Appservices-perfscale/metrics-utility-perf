@@ -1,0 +1,78 @@
+---
+- name: Create inventories, add hosts, and inject JSON facts into Ansible Facts
+  hosts: localhost
+  gather_facts: no
+  vars:
+    controller_url: "https://3.86.144.98"   # Change to your Ansible Controller API URL
+    organization_id: 1  # Change to your organization ID
+    controller_username: "admin2"  # Change to your Ansible Controller username
+    controller_password: "admin2"  # Change to your Ansible Controller password
+    json_facts_dir: "./host_facts"  # JSON fact files are in host_facts directory
+    inventories:
+      - { name: "AWS", description: "AWS Inventory" }
+      - { name: "AZURE", description: "Azure Inventory" }
+      - { name: "GCP", description: "GCP Inventory" }
+      - { name: "RHEL", description: "RHEL Inventory" }
+    num_hosts: 2  # Number of hosts per inventory
+    credential_id: 1  # Change this to the correct credential ID
+    job_template_id: 20  # ID of Job Template in AWX/Tower
+
+  tasks:
+    ### Step 1: Create Inventories ###
+    - name: Create inventories in Ansible Controller
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/api/v2/inventories/"
+        method: POST
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          name: "{{ item.name }}"
+          description: "{{ item.description }}"
+          organization: "{{ organization_id }}"
+        status_code: 201
+        validate_certs: no
+      with_items: "{{ inventories }}"
+      register: inventory_results
+
+    - name: Extract inventory IDs
+      set_fact:
+        inventory_map: "{{ inventory_map | default({}) | combine({ item.json.name: item.json.id }) }}"
+      with_items: "{{ inventory_results.results }}"
+
+    - name: Debug inventory mapping
+      debug:
+        var: inventory_map
+
+    ### Step 2: Create Hosts and Assign JSON Facts ###
+    - name: Read host facts from JSON files
+      ansible.builtin.include_vars:
+        file: "{{ json_facts_dir }}/{{ item.name }}.json"
+        name: "facts_{{ item.name }}"
+      with_items: "{{ inventories }}"
+
+    - name: Create hosts in each inventory with JSON facts
+      ansible.builtin.uri:
+        url: "{{ controller_url }}/api/v2/hosts/"
+        method: POST
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          name: "{{ item.0.name }}-host-{{ item.1 }}"
+          inventory: "{{ inventory_map[item.0.name] }}"
+          variables: "{{ lookup('vars', 'facts_' ~ item.0.name) | to_nice_json }}"
+        status_code: 201
+        validate_certs: no
+      with_nested:
+        - "{{ inventories }}"
+        - "{{ range(1, num_hosts + 1) | list }}"
+      register: host_creation_results
+
+    ### We cant use ansible_facts to POST, PUT, PATCH in the database anymore, so we have to inject directory in the db

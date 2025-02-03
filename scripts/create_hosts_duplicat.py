@@ -22,7 +22,7 @@ def creating_hosts(payload_list, url="https://18.207.188.125/api/controller/v2/b
 
     payload = json.dumps(
         {
-            "inventory": 8, "hosts": payload_list
+            "inventory": 163, "hosts": payload_list
         }
     )
 
