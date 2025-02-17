@@ -1,7 +1,6 @@
 ---
 - name: Echo Hello World on Ansible Controller Hosts
-  hosts: localhost
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - name: Echo Hello World
       command: echo "Hello, World!"
