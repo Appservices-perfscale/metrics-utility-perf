@@ -1,12 +1,8 @@
 ---
-- name: Echo Hello World on Ansible Controller Hosts
-  hosts: AZURE
-  gather_facts: yes
+- name: Run Hello World on Newly Created Hosts
+  hosts: all
+  gather_facts: no
   tasks:
-    - name: Echo Hello World
-      command: echo "Hello, World!"
-      register: hello_output
-
-    - name: Display Hello World Output
+    - name: Print Hello World message
       debug:
-        msg: "{{ hello_output.stdout }}"
+        msg: "Hello, World! This is running on"

@@ -15,7 +15,7 @@
       - { name: "RHEL", description: "RHEL Inventory" }
     num_hosts: 2  # Number of hosts per inventory
     credential_id: 1  # Change this to the correct credential ID
-    job_template_id: 20  # ID of Job Template in AWX/Tower
+    # job_template_id: 20  # ID of Job Template in AWX/Tower
 
   tasks:
     ### Step 1: Create Inventories ###
@@ -67,7 +67,12 @@
         body:
           name: "{{ item.0.name }}-host-{{ item.1 }}"
           inventory: "{{ inventory_map[item.0.name] }}"
-          variables: "{{ lookup('vars', 'facts_' ~ item.0.name) | to_nice_json }}"
+          variables: >-
+            {{
+              lookup('vars', 'facts_' ~ item.0.name) | 
+              combine({"ansible_connection": "local"}) | 
+              to_json
+            }}
         status_code: 201
         validate_certs: no
       with_nested:
