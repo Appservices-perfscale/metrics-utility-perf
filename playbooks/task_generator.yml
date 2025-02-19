@@ -16,19 +16,9 @@
   register: current_path
   when: selected_task == "1"
 
-- name: Debug Current Directory Output
+- name: Type 3 - Print Hello World
   debug:
-    msg: "Task {{ task_index }} executed on {{ inventory_hostname }}. Current directory: {{ current_path.stdout }}"
-  when: selected_task == "1"
-
-- name: Task 3 - Print Hostname
-  command: hostname
-  register: hostname_out
-  when: selected_task == "2"
-
-- name: Debug Hostname Output
-  debug:
-    msg: "Task {{ task_index }} executed on {{ inventory_hostname }} with hostname: {{ hostname_out.stdout }}"
+    msg: "Task {{ task_index }}: Hello, World!"
   when: selected_task == "2"
 
 - name: Task 4 - Show Current Date & Time
