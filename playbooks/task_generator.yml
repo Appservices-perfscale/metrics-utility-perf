@@ -1,0 +1,37 @@
+---
+- name: Select a Random Task Type
+  set_fact:
+    selected_task: "{{ [0, 1, 2, 3, 4] | random }}"
+
+- name: Debug Selected Task
+  debug:
+    msg: "For Task {{ task_index }}, selected task is {{ selected_task }}"
+
+- name: Task 1 - Echo Hello World
+  command: echo "Hello, World from {{ inventory_hostname }}!"
+  when: selected_task == "0"
+
+- name: Task 2 - Print Current Directory
+  command: pwd
+  register: current_path
+  when: selected_task == "1"
+
+- name: Debug Current Directory Output
+  debug:
+    msg: "Task {{ task_index }} executed on {{ inventory_hostname }}. Current directory: {{ current_path.stdout }}"
+  when: selected_task == "1"
+
+- name: Task 3 - Print Hostname
+  command: hostname
+  register: hostname_out
+  when: selected_task == "2"
+
+- name: Debug Hostname Output
+  debug:
+    msg: "Task {{ task_index }} executed on {{ inventory_hostname }} with hostname: {{ hostname_out.stdout }}"
+  when: selected_task == "2"
+
+- name: Task 4 - Show Current Date & Time
+  command: date
+  register: current_date
+  when: selected_task == "3"

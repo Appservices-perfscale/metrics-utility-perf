@@ -13,7 +13,7 @@
       - { name: "AZURE", description: "Azure Inventory" }
       - { name: "GCP", description: "GCP Inventory" }
       - { name: "RHEL", description: "RHEL Inventory" }
-    num_hosts: 2  # Number of hosts per inventory
+    num_hosts: 100  # Number of hosts per inventory
     credential_id: 1  # Change this to the correct credential ID
     # job_template_id: 20  # ID of Job Template in AWX/Tower
 

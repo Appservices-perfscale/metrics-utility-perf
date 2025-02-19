@@ -1,8 +1,16 @@
 ---
-- name: Run Hello World on Newly Created Hosts
+- name: Run N Random Tasks on Each Host
   hosts: all
   gather_facts: no
+  vars:
+    task_count: 3
   tasks:
-    - name: Print Hello World message
-      debug:
-        msg: "Hello, World! This is running on"
+    - name: Generate List of Random Tasks
+      set_fact:
+        task_list: "{{ range(1, task_count + 1) | list }}"
+
+    - name: Execute Random Tasks
+      include_tasks: task_generator.yml
+      loop: "{{ task_list }}"
+      loop_control:
+        loop_var: task_index
