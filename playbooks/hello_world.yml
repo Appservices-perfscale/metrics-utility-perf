@@ -1,16 +1,36 @@
 ---
-- name: Run N Random Tasks on Each Host
+- name: Pick a Random Task
   hosts: all
   gather_facts: no
-  vars:
-    task_count: 3
   tasks:
-    - name: Generate List of Random Tasks
+    - name: Select a Random Task Type
       set_fact:
-        task_list: "{{ range(1, task_count + 1) | list }}"
+        selected_task: "{{ [0, 1, 2, 3, 4] | random }}"
 
-    - name: Execute Random Tasks
-      include_tasks: task_generator.yml
-      loop: "{{ task_list }}"
-      loop_control:
-        loop_var: task_index
+    - name: Debug Selected Task
+      debug:
+        msg: "Selected task is {{ selected_task }}"
+
+    - name: Task 1 - Echo Hello World
+      command: echo "Hello, World from {{ inventory_hostname }}!"
+      when: selected_task == "0"
+
+    - name: Task 2 - Print Current Directory
+      command: pwd
+      register: current_path
+      when: selected_task == "1"
+
+    - name: Task 3 - Print Hello World
+      debug:
+        msg: "Hello, World!"
+      when: selected_task == "2"
+
+    - name: Task 4 - Show Current Date & Time
+      command: date
+      register: current_date
+      when: selected_task == "3"
+
+    - name: Task 5 - List Files in Current Directory
+      command: ls -l
+      register: file_list
+      when: selected_task == "4"
