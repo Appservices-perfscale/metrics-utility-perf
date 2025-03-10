@@ -1,0 +1,35 @@
+---
+- name: Run "automation" template on multiple inventories 20 times
+  hosts: localhost
+  gather_facts: no
+  vars:
+    controller_url: "https://3.86.144.98"  
+    organization_id: 1  
+    controller_username: "admin2" 
+    controller_password: "admin2"  
+    inventories:
+      - AWS
+      - AZURE
+      - GCP
+      - RHEL
+    repeat_count: 1  # Number of times to run
+
+  tasks:
+    - name: Run the "automation" job template multiple times
+      ansible.controller.job_template:
+        controller_host: "{{ controller_url }}"
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
+        validate_certs: no  # Change to yes if using valid SSL certificates
+        name: "automation"
+        organization: "{{ organization_id }}"
+        inventory: "{{ item.1 }}"
+        wait: yes
+      loop: "{{ range(repeat_count) | product(inventories) | list }}"
+      loop_control:
+        label: "Run {{ item.0 + 1 }} on {{ item.1 }}"
+      register: job_results
+
+    - name: Display job results
+      debug:
+        var: job_results
