@@ -3,23 +3,23 @@
   hosts: localhost
   gather_facts: no
   vars:
-    controller_url: "https://3.86.144.98"   # Change to your Ansible Controller API URL
-    organization_id: 1  # Change to your organization ID
-    controller_username: "admin2"  # Change to your Ansible Controller username
-    controller_password: "admin2"  # Change to your Ansible Controller password
-    json_facts_dir: "./host_facts"  # JSON fact files are in host_facts directory
-    inventories:
-      - { name: "AWS", description: "AWS Inventory" }
-      - { name: "AZURE", description: "Azure Inventory" }
-      - { name: "GCP", description: "GCP Inventory" }
-      - { name: "RHEL", description: "RHEL Inventory" }
-    num_hosts: 334  # Number of hosts per inventory
-    credential_id: 1  # Change this to the correct credential ID
-    # job_template_id: 20  # ID of Job Template in AWX/Tower
+      controller_url: "https://3.86.144.98"   # Change to your Ansible Controller API URL
+      organization_id: 1  # Change to your organization ID
+      controller_username: "admin2"  # Change to your Ansible Controller username
+      controller_password: "admin2"  # Change to your Ansible Controller password
+      json_facts_dir: "./host_facts"  # JSON fact files are in host_facts directory
+      inventories:
+        - { name: "AWS", description: "AWS Inventory" }
+        - { name: "AZURE", description: "Azure Inventory" }
+        - { name: "GCP", description: "GCP Inventory" }
+        - { name: "RHEL", description: "RHEL Inventory" }
+      num_hosts: 1250  # Number of hosts per inventory
+      credential_id: 1  # Change this to the correct credential ID
+      # job_template_id: 20  # ID of Job Template in AWX/Tower
 
   tasks:
     ### Step 1: Create Inventories ###
-    - name: Create inventories in Ansible Controller
+    - name: Create inventories in Ansible Controller    
       ansible.builtin.uri:
         url: "{{ controller_url }}/api/v2/inventories/"
         method: POST

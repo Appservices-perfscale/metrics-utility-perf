@@ -4,6 +4,8 @@
 3. trigger create_host_facts.py to populate ansible facts as ansible_facts api in controller doesn't support PATCH, PUT, POST, so we have to update directly from db
 4. In Controller UI, trigger hello_world.yml for each inventory. This will pick a random task and run it. # of automations in the report means how many jobs have run in each host. It is not mean for tasks
 
+5. Run the `running_template.yml` file. Change the `repeat_count` to run a template in controller multiple times. 
+
 ---------
 Monitoring: 
 
