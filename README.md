@@ -14,3 +14,38 @@ Monitoring:
 ```
 
 ```
+
+How to make it run using local dev environment with containers and gateway:
+
+1) creating_inventory_hosts_and_variables.yml    needs another variable named 'path_prefix' that should be set to: controller
+
+Example:
+ansible-playbook creating_inventory_hosts_and_variables.yml   --extra-vars "controller_url=https://localhost:8030 controller_username=admin controller_password=admin organization_id=1 credential_id=1 path_prefix=controller"
+
+
+it is because, localhost:8030 points to the gateway and the gateway uses prefix controller, thus /api/v2 that controller uses must be /api/controller/v2 for gateway urls
+
+2) running create_host_facts.py
+
+This one needs to gather information about DB connection.
+
+docker ps
+
+you will see the result for db container:
+
+669953676e5a   quay.io/sclorg/postgresql-15-c9s              "container-entrypoin…"   22 hours ago   Up 4 hours   0.0.0.0:5441->5432/tcp, [::]:5441->5432/tcp                                                                                                                                                                                                                 tools_postgres_1
+
+it is mapping from port 5432 (standard postgres port visible inside container) to 5441 - this port is visible outside of container
+
+you then need to obtain db password:
+docker exec -it tools_postgres_1 printenv
+
+search for:
+POSTGRESQL_PASSWORD
+
+finally you can run command:
+python3 create_host_facts.py --user=awx --password={pswd from printenv} --host="localhost" --port=5441
+
+
+
+

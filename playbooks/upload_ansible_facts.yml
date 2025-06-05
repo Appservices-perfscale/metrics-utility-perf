@@ -2,6 +2,7 @@
   hosts: all
   gather_facts: hi
   vars:
+    path_prefix: ""
     controller_url: "https://3.86.144.98"  # Change to your Ansible Controller API URL
     controller_username: "admin2"          # Change to your Ansible Controller username
     controller_password: "admin2"          # Change to your Ansible Controller password
@@ -9,7 +10,7 @@
   tasks:
     - name: Fetch All Hosts from Ansible Controller
       ansible.builtin.uri:
-        url: "{{ controller_url }}/api/v2/hosts/"
+        url: "{{ controller_url }}/api/{{ path_prefix }}/v2/hosts/"
         method: GET
         user: "{{ controller_username }}"
         password: "{{ controller_password }}"
@@ -27,7 +28,7 @@
 
     - name: Update Ansible Facts for All Hosts with "hello world"
       ansible.builtin.uri:
-        url: "{{ controller_url }}/api/v2/hosts/{{ item }}/ansible_facts/"
+        url: "{{ controller_url }}/api/{{ path_prefix }}/v2/hosts/{{ item }}/ansible_facts/"
         method: PUT
         user: "{{ controller_username }}"
         password: "{{ controller_password }}"
