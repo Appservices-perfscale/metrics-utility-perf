@@ -11,7 +11,7 @@
       - AZURE
       - GCP
       - RHEL
-    repeat_count: 5  # Number of times to run
+    repeat_count: 17  # Number of times to run
 
   tasks:
     - name: Launch the "automation" job template multiple times with specific inventory
