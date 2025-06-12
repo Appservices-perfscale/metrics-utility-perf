@@ -2,16 +2,17 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
+import argparse
 
 """
 Adding host_facts directly by editing awx db
 """
 
 
-def fetch_inventory_id(host, database, user, password):
+def fetch_inventory_id(host, database, user, password, port):
     
     """
-    fetchign inventory_id
+    fetching inventory_id
     """
     
     try:
@@ -20,7 +21,8 @@ def fetch_inventory_id(host, database, user, password):
             host=host,
             database=database,
             user=user,
-            password=password
+            password=password,
+            port=port,
         )
 
         # Create a cursor object to interact with the database
@@ -49,7 +51,7 @@ def fetch_inventory_id(host, database, user, password):
         return id_inventory_list
     
     
-def update_table(host, database, user, password, list_inventory):
+def update_table(host, database, user, password, port, list_inventory):
     """
     Function to update a table in a PostgreSQL database dynamically
     """
@@ -59,8 +61,10 @@ def update_table(host, database, user, password, list_inventory):
             host=host,
             database=database,
             user=user,
-            password=password
+            password=password,
+            port=port,
         )
+        print('Connected to DB')
 
         # Create a cursor object to interact with the database
         cursor = conn.cursor()
@@ -111,7 +115,17 @@ if __name__ == "__main__":
     database = "awx"
     user = "larry"
     password = "larry1"
-    
-    list_inventory = fetch_inventory_id(host, database, user, password)
+    port = 5432
 
-    update_table(host, database, user, password, list_inventory)
+    parser = argparse.ArgumentParser(description="Update host facts in AWX database.")
+    parser.add_argument("--host", default=port, help="Database host")
+    parser.add_argument("--port", default=host, help="Database port")
+    parser.add_argument("--database", default=database, help="Database name")
+    parser.add_argument("--user", default=user, help="Database user")
+    parser.add_argument("--password", default=password, help="Database password")
+
+    args = parser.parse_args()
+
+    list_inventory = fetch_inventory_id(args.host, args.database, args.user, args.password, args.port)
+
+    update_table(args.host, args.database, args.user, args.password, args.port, list_inventory)
