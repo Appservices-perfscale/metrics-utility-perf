@@ -46,6 +46,19 @@ POSTGRESQL_PASSWORD
 finally you can run command:
 python3 create_host_facts.py --user=awx --password={pswd from printenv} --host="localhost" --port=5441
 
+3) Running the job templates
+
+- Create a project from source in this repo
+- Create job template from this project and select automation.yml file, select whatever inventory you want
+- select Prompt on Launch for Inventory - because the standard inventory you set for the job template must be overriden
+
+4) Run the playbook:
+
+ansible-playbook running_template.yml --extra-vars 'controller_url=https://localhost:8043 controller_username=admin controller_password={pswd from printenv just as before}'
+
+you can also validate the url of controller using:
+
+docker ps and search for tools_awx_1
 
 
 
